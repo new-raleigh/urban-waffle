@@ -30,6 +30,7 @@ jobs:
                 } \
               } \
             } > ~/.terraform.d/credentials.tfrc.json
+        cat ~/.terraform.d/credentials.tfrc.json
     - name: Deploy to production
       run: |
         npx lerna bootstrap
