@@ -24,5 +24,5 @@ jobs:
         npx lerna bootstrap
         npx lerna run get
         npx lerna run build
-        npx lerna run diff
+        npx lerna run plan
 
