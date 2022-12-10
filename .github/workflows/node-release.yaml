@@ -47,6 +47,15 @@ jobs:
       run: |
         npx lerna run synth
 
+    - name: Test
+      run: |
+        npx lerna run test
+
+
     - name: Plan
       run: |
         npx lerna run plan
+
+    - name: Deploy
+      run: |
+        npx lerna run deploy
