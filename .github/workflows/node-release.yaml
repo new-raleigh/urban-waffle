@@ -24,13 +24,13 @@ jobs:
       run: |
         mkdir -p ~/.terraform.d
         cat <<EOT >> ~/.terraform.d/credentials.tfrc.json
-        echo {
-              "credentials": {
-                "app.terraform.io": {
-                  "token": "$TFE_TOKEN"
-                }
-              }
+        {
+          "credentials": {
+            "app.terraform.io": {
+              "token": "$TFE_TOKEN"
             }
+          }
+        }
         EOT
         cat ~/.terraform.d/credentials.tfrc.json
       env:
