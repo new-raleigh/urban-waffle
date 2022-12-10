@@ -1,34 +1,28 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
+name: Deploy
 
 on:
   push:
-    branches: [ "master" ]
-  pull_request:
-    branches: [ "master" ]
+    branches:
+      - master
 
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [14.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
     steps:
-    - uses: actions/checkout@v3
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v3
+    - uses: actions/checkout@v2
+    - uses: actions/setup-node@v3
       with:
-        node-version: ${{ matrix.node-version }}
+        node-version: 14.x
         cache: 'npm'
-    - run: npm install -g lerna typescript cdktf
-    - run: lerna bootstrap
-    - run: lerna run get
-    - run: lerna run build
-    - run: lerna run test
-    - run: lerna run diff
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Build and test project
+      run: npm run build && npm run test
+
+    - name: Deploy to production
+      run: |
+        npx lerna bootstrap
+        npx lerna run build
