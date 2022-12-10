@@ -56,6 +56,3 @@ jobs:
       run: |
         npm lerna run plan
 
-    - name: Deploy
-      run: |
-        npm lerna run deploy
