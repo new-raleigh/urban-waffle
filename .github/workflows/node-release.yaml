@@ -37,22 +37,22 @@ jobs:
 
     - name: Bootstrap
       run: |
-        npm lerna bootstrap
+        npx lerna bootstrap
 
     - name: Get Modules
       run: |
-        npm lerna run get
+        npx lerna run get
 
     - name: Synth
       run: |
-        npm lerna run synth
+        npx lerna run synth
 
     - name: Test
       run: |
-        npm lerna run test
+        npx lerna run test
 
 
     - name: Plan
       run: |
-        npm lerna run plan
+        npx lerna run plan
 
