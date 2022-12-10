@@ -35,19 +35,18 @@ jobs:
       env:
         TFE_TOKEN: ${{secrets.TFE_TOKEN}}
 
-    - name: Deploy to production
+    - name: Bootstrap
       run: |
         npx lerna bootstrap
+
+    - name: Get Modules
+      run: |
         npx lerna run get
 
+    - name: Synth
+      run: |
+        npx lerna run synth
 
-    - name: Run Terraform CDK
-      uses: hashicorp/terraform-cdk-action@v0.1.0
-      with:
-        terraformVersion: 1.3.0
-        cdktfVersion: 0.12.2
-        workingDirectory: packages/organization
-        stackName: organization
-        mode: plan-only
-        terraformCloudToken: ${{ secrets.TFE_TOKEN }}
-        githubToken: ${{ secrets.GITHUB_TOKEN }}
+    - name: Plan
+      run: |
+        npx lerna run plan
