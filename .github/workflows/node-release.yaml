@@ -23,13 +23,15 @@ jobs:
     - name: Install dependencies
       run: |
         mkdir -p ~/.terraform.d
-        echo { \n \
-              "credentials": { \n \
-                "app.terraform.io": { \n \
-                  "token": "$TFE_TOKEN" \n \
-                } \n \
-              } \n \
-            } > ~/.terraform.d/credentials.tfrc.json
+        cat <<EOT >> ~/.terraform.d/credentials.tfrc.json
+        echo {
+              "credentials": {
+                "app.terraform.io": {
+                  "token": "$TFE_TOKEN"
+                }
+              }
+            }
+        EOT
         cat ~/.terraform.d/credentials.tfrc.json
       env:
         TFE_TOKEN: ${{secrets.TFE_TOKEN}}
