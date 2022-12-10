@@ -5,7 +5,8 @@
     "packages/*"
   ],
   "devDependencies": {
-    "lerna": "^6.0.3"
+    "lerna": "^6.0.3",
+    "cdktf-cli": "^0.14.3"
   },
   "scripts": {
     "bootstrap": "npx lerna bootstrap",
@@ -21,8 +22,5 @@
     "plan": "npx lerna run plan",
     "deploy": "npx lerna run deploy",
     "destroy": "npx lerna run destroy"
-  },
-  "dependencies": {
-    "cdktf-cli": "^0.14.3"
   }
 }
