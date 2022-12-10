@@ -6,18 +6,18 @@
   "license": "MPL-2.0",
   "private": true,
   "scripts": {
-    "get": "cdktf get",
-    "build": "tsc",
-    "synth": "cdktf synth",
-    "compile": "tsc --pretty",
-    "watch": "tsc -w",
-    "test": "jest",
-    "test:watch": "jest --watch",
+    "get": "npx cdktf get",
+    "build": "npx tsc",
+    "synth": "npx cdktf synth",
+    "compile": "npx tsc --pretty",
+    "watch": "npx tsc -w",
+    "test": "npx jest",
+    "test:watch": "npx jest --watch",
     "upgrade": "npm i cdktf@latest cdktf-cli@latest",
     "upgrade:next": "npm i cdktf@next cdktf-cli@next",
-    "plan": "cdktf diff",
-    "deploy": "cdktf deploy",
-    "destroy": "cdktf destroy"
+    "plan": "npx cdktf diff",
+    "deploy": "npx cdktf deploy",
+    "destroy": "npx cdktf destroy"
   },
   "engines": {
     "node": ">=14.0"
