@@ -15,12 +15,12 @@ class MyStack extends TerraformStack {
     });
 
     // Use the workspace data element
-    const organizationWorkspaceOutputs = new DataTfeWorkspace(this, "organization_workspace",{
-      name:"organization",
+    const organizationWorkspaceOutputs = new DataTfeWorkspace(this, "bootstrap_workspace",{
+      name:"bootstrap",
       organization:"NotErickG",
     });
 
-    new TerraformOutput(this, "organization_workspace_outputs", {
+    new TerraformOutput(this, "boostrap_workspace_outputs", {
       value: organizationWorkspaceOutputs,
     });
 
@@ -33,6 +33,6 @@ const stack = new MyStack(app, "organization");
 new CloudBackend(stack, {
   hostname: "app.terraform.io",
   organization: "NotErickG",
-  workspaces: new NamedCloudWorkspace("organization")
+  workspaces: new NamedCloudWorkspace("bootstrap")
 });
 app.synth();
