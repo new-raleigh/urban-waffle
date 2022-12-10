@@ -27,8 +27,8 @@ jobs:
         node-version: ${{ matrix.node-version }}
         cache: 'npm'
     - run: npm install -g lerna typescript cdktf
-    - run: npx lerna bootstrap
-    - run: npx lerna run get
-    - run: npx lerna run build
-    - run: npx lerna run test
-    - run: npx lerna run diff
+    - run: lerna bootstrap
+    - run: lerna run get
+    - run: lerna run build
+    - run: lerna run test
+    - run: lerna run diff
