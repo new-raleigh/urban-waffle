@@ -19,6 +19,22 @@ jobs:
     - name: Install dependencies
       run: npm ci
 
+
+    - name: Install dependencies
+      run: |
+        mkdir -p ~/.terraform.d
+        cat <<EOT >> ~/.terraform.d/credentials.tfrc.json
+        {
+          "credentials": {
+            "app.terraform.io": {
+              "token": "$TFE_TOKEN"
+            }
+          }
+        }
+        EOT
+      env:
+        TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+
     - name: Deploy to production
       run: |
         npx lerna bootstrap
