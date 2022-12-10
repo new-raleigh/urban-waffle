@@ -8,8 +8,21 @@
     "lerna": "^6.0.3"
   },
   "scripts": {
+    "bootstrap": "npx lerna bootstrap",
     "build": "npx lerna run build",
-    "test": "npx lerna run test"
+    "test": "npx lerna run test",
+
+    "get": "npx lerna run get",
+    "synth": "npx lerna run synth",
+    "compile": "npx lerna run compile",
+    "watch": "npx lerna run watch",
+    "test:watch": "npx lerna run test:watch",
+    "upgrade": "npx lerna run upgrade",
+    "upgrade:next": "npx lerna run upgrade:next",
+    "plan": "npx lerna run plan",
+    "deploy": "npx lerna run deploy",
+    "destroy": "npx lerna run destroy"
+
 
   }
 }
