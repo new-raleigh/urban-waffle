@@ -22,4 +22,5 @@ jobs:
     - name: Deploy to production
       run: |
         npx lerna bootstrap
+        npx lerna run get
         npx lerna run build
