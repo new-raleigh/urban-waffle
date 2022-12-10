@@ -37,25 +37,25 @@ jobs:
 
     - name: Bootstrap
       run: |
-        npx lerna bootstrap
+        npm lerna bootstrap
 
     - name: Get Modules
       run: |
-        npx lerna run get
+        npm lerna run get
 
     - name: Synth
       run: |
-        npx lerna run synth
+        npm lerna run synth
 
     - name: Test
       run: |
-        npx lerna run test
+        npm lerna run test
 
 
     - name: Plan
       run: |
-        npx lerna run plan
+        npm lerna run plan
 
     - name: Deploy
       run: |
-        npx lerna run deploy
+        npm lerna run deploy
