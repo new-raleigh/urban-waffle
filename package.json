@@ -23,6 +23,6 @@
     "destroy": "npx lerna run destroy"
   },
   "dependencies": {
-    "cdktf": "^0.14.3"
+    "cdktf-cli": "^0.14.3"
   }
 }

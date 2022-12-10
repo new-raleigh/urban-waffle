@@ -31,7 +31,6 @@
     "typescript": "^4.9.4"
   },
   "dependencies": {
-    "@cdktf/provider-tfe": "^4.0.2",
-    "cdktf": "^0.14.3"
+    "@cdktf/provider-tfe": "^4.0.2"
   }
 }
