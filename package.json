@@ -11,7 +11,6 @@
     "bootstrap": "npx lerna bootstrap",
     "build": "npx lerna run build",
     "test": "npx lerna run test",
-
     "get": "npx lerna run get",
     "synth": "npx lerna run synth",
     "compile": "npx lerna run compile",
@@ -22,7 +21,8 @@
     "plan": "npx lerna run plan",
     "deploy": "npx lerna run deploy",
     "destroy": "npx lerna run destroy"
-
-
+  },
+  "dependencies": {
+    "cdktf": "^0.14.3"
   }
 }
