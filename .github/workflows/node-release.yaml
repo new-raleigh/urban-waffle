@@ -39,6 +39,15 @@ jobs:
       run: |
         npx lerna bootstrap
         npx lerna run get
-        npx lerna run build
-        npx lerna run deploy
 
+
+    - name: Run Terraform CDK
+      uses: hashicorp/terraform-cdk-action@v0.1.0
+      with:
+        terraformVersion: 1.3.0
+        cdktfVersion: 0.12.2
+        workingDirectory: packages/organization
+        stackName: my-stack
+        mode: plan-only
+        terraformCloudToken: ${{ secrets.TFE_TOKEN }}
+        githubToken: ${{ secrets.GITHUB_TOKEN }}
