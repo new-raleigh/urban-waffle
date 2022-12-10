@@ -32,7 +32,6 @@ jobs:
           }
         }
         EOT
-        cat ~/.terraform.d/credentials.tfrc.json
       env:
         TFE_TOKEN: ${{secrets.TFE_TOKEN}}
 
@@ -41,5 +40,5 @@ jobs:
         npx lerna bootstrap
         npx lerna run get
         npx lerna run build
-        npx lerna run plan
+        npx lerna run deploy
 

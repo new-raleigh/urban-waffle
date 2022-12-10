@@ -16,8 +16,8 @@
     "upgrade": "npm i cdktf@latest cdktf-cli@latest",
     "upgrade:next": "npm i cdktf@next cdktf-cli@next",
     "plan": "npx cdktf diff --verbose",
-    "deploy": "npx cdktf deploy",
-    "destroy": "npx cdktf destroy"
+    "deploy": "npx cdktf deploy --auto-approve",
+    "destroy": "npx cdktf destroy --auto-approve"
   },
   "engines": {
     "node": ">=14.0"
