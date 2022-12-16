@@ -12,7 +12,8 @@ on:
 jobs:
   deploy:
     runs-on: ubuntu-latest
-
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
@@ -36,8 +37,7 @@ jobs:
           }
         }
         EOT
-      env:
-        TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+        
 
     - name: Bootstrap
       run: |
