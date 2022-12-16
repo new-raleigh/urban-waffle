@@ -17,14 +17,14 @@ class MyStack extends TerraformStack {
     if (process.env.TFE_TOKEN === undefined || process.env.TFE_TOKEN === "") {
       throw new Error("TFE_TOKEN is undefined or empty. Please set the TFE_TOKEN environment variable to your Terraform Cloud API token.");
     }
-    // checks to see if the process.env.GITHUB_TOKEN is undefined and throws an error if it is.
-    if (process.env.GITHUB_TOKEN === undefined || process.env.GITHUB_TOKEN === "") {
-      throw new Error("GITHUB_TOKEN is undefined or empty. Please set the GITHUB_TOKEN environment variable to your GitHub API token.");
+    // checks to see if the process.env.GH_ACCESS_TOKEN is undefined and throws an error if it is.
+    if (process.env.GH_ACCESS_TOKEN === undefined || process.env.GH_ACCESS_TOKEN === "") {
+      throw new Error("GH_ACCESS_TOKEN is undefined or empty. Please set the GH_ACCESS_TOKEN environment variable to your GitHub API token.");
     }
 
 
     new GithubProvider(this, "github", {
-      token: process.env.GITHUB_TOKEN,
+      token: process.env.GH_ACCESS_TOKEN,
     });
 
     new OranizationRepository(this, "organization_repository", "test", "NotErickG", process.env.TFE_TOKEN);
