@@ -18,5 +18,6 @@ jobs:
         with:
           node-version: 16.x
           cache: 'npm'
+      - uses: actions/checkout@v3
       - uses: ./.github/workflows/lerna.yaml
 
