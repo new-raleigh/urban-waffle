@@ -1,7 +1,11 @@
 name: Deploy
 
+# This action should file when the code is pushed on master or merged into master
 on:
   push:
+    branches:
+      - master
+  pull_request:
     branches:
       - master
 
@@ -56,3 +60,21 @@ jobs:
       run: |
         npx lerna run plan
 
+    - name: Deploy
+      run: |
+        npx lerna run deploy
+
+    # - name: Publish
+    #   run: |
+    #     npx lerna publish from-package --yes
+
+    # - name: Push
+    #   run: |
+    #     git push --follow-tags
+
+    # - name: Cleanup
+    #   run: |
+    #     rm -rf ~/.terraform.d
+
+    # - name: Slack Notification
+    #   uses:
