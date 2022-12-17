@@ -10,7 +10,7 @@ import * as path from "path";
 const S3_ORIGIN_ID = "s3Origin";
 
 interface FrontendOptions {
-  environment: string;
+  stage: string;
   apiEndpoint: string;
 }
 
@@ -19,7 +19,7 @@ export class Frontend extends Construct {
     super(scope, id);
 
     const bucket = new S3Bucket(this, "bucket", {
-      bucketPrefix: `sls-example-frontend-${options.environment}`,
+      bucketPrefix: `sls-example-frontend-${options.stage}`,
       tags: {
         "hc-internet-facing": "true", // this is only needed for HashiCorp internal security auditing
       },
@@ -56,7 +56,7 @@ export class Frontend extends Construct {
     });
 
     const cf = new CloudfrontDistribution(this, "cf", {
-      comment: `Serverless example frontend for env=${options.environment}`,
+      comment: `Serverless example frontend for env=${options.stage}`,
       enabled: true,
       defaultCacheBehavior: {
         allowedMethods: [

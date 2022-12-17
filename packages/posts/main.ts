@@ -2,9 +2,9 @@ import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
 import { App, TerraformStack, CloudBackend, NamedCloudWorkspace  } from "cdktf";
 
 import { Construct } from "constructs";
+import { Frontend } from "./frontend";
 import { Posts } from "./posts";
-// import { LocalProvider } from "@cdktf/provider-local/lib/provider";
-
+import { LocalProvider } from "@cdktf/provider-local/lib/provider";
 type Stage =  "development" | "production";
 
 interface StageOptions {
@@ -14,7 +14,26 @@ interface StageOptions {
 
 const app = new App();
 
+interface FrontendStackOptions extends StageOptions {
+  apiEndpoint: string;
+}
 
+class FrontendStack extends TerraformStack {
+  constructor(
+    scope: Construct,
+    name: string,
+    public options: FrontendStackOptions
+  ) {
+    super(scope, name);
+
+    new AwsProvider(this, "aws", { region: "us-east-1" });
+    new LocalProvider(this, "local");
+    new Frontend(this, "frontend", {
+      stage: options.stage,
+      apiEndpoint: options.apiEndpoint,
+    });
+  }
+}
 
 class PostsStack extends TerraformStack {
   public posts: Posts;
@@ -30,18 +49,12 @@ class PostsStack extends TerraformStack {
 
     this.posts = new Posts(this, "posts", {
       stage: options.stage,
-    });
+ });
   }
 }
 
-const postsStack = new PostsStack(app, "organization", {
+const postsStack = new PostsStack(app, "posts-stack", {
   stage: assertStage(process.env.STAGE),
-
-});
-
-const frontEndStack = new PostsStack(app, "organization", {
-  stage: assertStage(process.env.STAGE),
-
 });
 new CloudBackend(postsStack, {
   hostname: "app.terraform.io",
@@ -50,6 +63,10 @@ new CloudBackend(postsStack, {
   token: process.env.TFE_TOKEN,
 });
 
+const frontEndStack = new FrontendStack(app, "posts-frontend-stack", {
+  stage: assertStage(process.env.STAGE),
+  apiEndpoint: postsStack.posts.apiEndpoint,
+});
 new CloudBackend(frontEndStack, {
   hostname: "app.terraform.io",
   organization: "new-raleigh",
