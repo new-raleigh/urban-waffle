@@ -61,15 +61,23 @@ jobs:
       run: |
         npx lerna run test
 
+    - name: Plan Organization
+      run: |
+        npx lerna run plan --scope organization
+
+    - name: Deploy Organization
+      if: github.ref == 'refs/heads/main'
+      run: |
+        npx lerna run deploy --scope organization
 
     - name: Plan
       run: |
-        npx lerna run plan
+        npx lerna run plan --ignore organization
 
     - name: Deploy
       if: github.ref == 'refs/heads/main'
       run: |
-        npx lerna run deploy
+        npx lerna run deploy --ignore organization
 
     # - name: Publish
     #   run: |
