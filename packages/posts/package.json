@@ -20,7 +20,7 @@
     "destroy:dev": "npm destroy:frontend && cdktf destroy '*-dev'",
     "destroy:prod": "npm destroy:frontend && cdktf destroy '*-prod'",
     "destroy:frontend": "npm workspace frontend run destroy",
-    "plan": "cdktf diff --verbose",
+    "plan": "for stack in $(cdktf list | grep -oE '^[^ ]+'); do cdktf diff $stack; done",
     "deploy": "cdktf deploy --auto-approve",
     "destroy": "cdktf destroy --auto-approve"
   },
