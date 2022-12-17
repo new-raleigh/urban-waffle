@@ -29,12 +29,12 @@ class MyStack extends TerraformStack {
 
     new GithubProvider(this, "github", {
       token: process.env.GH_ACCESS_TOKEN,
-      owner: "erick-portfolio"
+      owner: "new-raleigh"
     });
 
     new OranizationRepository(this, "posts", {
       name: "posts",
-      tfeOrganization: "NotErickG",
+      tfeOrganization: "new-raleigh",
       tfeToken: process.env.TFE_TOKEN,
       tfeOrganizationToken: process.env.TFE_ORGANIZATION_TOKEN,
     });
@@ -42,7 +42,7 @@ class MyStack extends TerraformStack {
     // Use the workspace data element
     const organizationWorkspaceOutputs = new DataTfeWorkspace(this, "bootstrap_workspace",{
       name:"bootstrap",
-      organization:"NotErickG",
+      organization:"new-raleigh",
     });
 
     new TerraformOutput(this, "boostrap_workspace_outputs", {
@@ -57,7 +57,7 @@ const app = new App();
 const stack = new MyStack(app, "organization");
 new CloudBackend(stack, {
   hostname: "app.terraform.io",
-  organization: "NotErickG",
+  organization: "new-raleigh",
   workspaces: new NamedCloudWorkspace("bootstrap"),
   token: process.env.TFE_TOKEN,
 });

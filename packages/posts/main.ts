@@ -40,7 +40,7 @@ const stack = new PostsStack(app, "organization", {
 });
 new CloudBackend(stack, {
   hostname: "app.terraform.io",
-  organization: "NotErickG",
+  organization: "new-raleigh",
   workspaces: new NamedCloudWorkspace("posts"),
   token: process.env.TFE_TOKEN,
 });
