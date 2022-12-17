@@ -12,6 +12,9 @@ jobs:
     env:
       TFE_TOKEN: ${{secrets.TFE_TOKEN}}
       GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
     - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
@@ -45,6 +48,11 @@ jobs:
       run: |
         npx lerna run get
 
+    - name: Build
+      run: |
+        npx lerna run build
+
+
     - name: Synth
       run: |
         npx lerna run synth
@@ -59,7 +67,7 @@ jobs:
         npx lerna run plan
 
     - name: Deploy
-      if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/master'
       run: |
         npx lerna run deploy
 
