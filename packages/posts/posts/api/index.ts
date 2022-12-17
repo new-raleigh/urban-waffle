@@ -40,7 +40,7 @@ export class PostsApi extends Construct {
 
     // api lambda tf resources
     const code = new NodejsFunction(this, "code", {
-      path: join(__dirname, "../../node_modules/posts-lambda/index.ts"),
+      path: join(__dirname, "./lambda/index.ts"),
     });
 
     // Create Lambda role
