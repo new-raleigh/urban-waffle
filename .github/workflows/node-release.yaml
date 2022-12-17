@@ -1,10 +1,10 @@
 name: Deploy
 
-# This action should file when the code is pushed on master or merged into master
+# This action should file when the code is pushed on main or merged into main
 on:
   push:
     branches:
-      - master
+      - main
   pull_request: {}
 jobs:
   deploy:
@@ -67,7 +67,7 @@ jobs:
         npx lerna run plan
 
     - name: Deploy
-      # if: github.ref == 'refs/heads/master'
+      # if: github.ref == 'refs/heads/main'
       run: |
         npx lerna run deploy
 
