@@ -39,6 +39,13 @@ class MyStack extends TerraformStack {
       tfeOrganizationToken: process.env.TFE_ORGANIZATION_TOKEN,
     });
 
+    new OranizationRepository(this, "posts-front-end", {
+      name: "posts-front-end",
+      tfeOrganization: "new-raleigh",
+      tfeToken: process.env.TFE_TOKEN,
+      tfeOrganizationToken: process.env.TFE_ORGANIZATION_TOKEN,
+    });
+
     // Use the workspace data element
     const organizationWorkspaceOutputs = new DataTfeWorkspace(this, "bootstrap_workspace",{
       name:"bootstrap",

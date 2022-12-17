@@ -34,14 +34,26 @@ class PostsStack extends TerraformStack {
   }
 }
 
-const stack = new PostsStack(app, "organization", {
+const postsStack = new PostsStack(app, "organization", {
   stage: assertStage(process.env.STAGE),
 
 });
-new CloudBackend(stack, {
+
+const frontEndStack = new PostsStack(app, "organization", {
+  stage: assertStage(process.env.STAGE),
+
+});
+new CloudBackend(postsStack, {
   hostname: "app.terraform.io",
   organization: "new-raleigh",
   workspaces: new NamedCloudWorkspace("posts"),
+  token: process.env.TFE_TOKEN,
+});
+
+new CloudBackend(frontEndStack, {
+  hostname: "app.terraform.io",
+  organization: "new-raleigh",
+  workspaces: new NamedCloudWorkspace("posts-front-end"),
   token: process.env.TFE_TOKEN,
 });
 
