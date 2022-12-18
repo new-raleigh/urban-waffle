@@ -20,9 +20,9 @@
     "destroy:dev": "npm destroy:frontend && cdktf destroy '*-dev'",
     "destroy:prod": "npm destroy:frontend && cdktf destroy '*-prod'",
     "destroy:frontend": "npm workspace frontend run destroy",
-    "plan": "for stack in $(cdktf list | grep -oE '^[^ ]+'); do cdktf diff $stack; done",
-    "deploy": "cdktf deploy --auto-approve",
-    "destroy": "cdktf destroy --auto-approve"
+    "plan": "for stack in $(cdktf list | tail -n 2 | grep -oE '^[^ ]+'); do cdktf diff $stack; done",
+    "deploy": "for stack in $(cdktf list | tail -n 2 | grep -oE '^[^ ]+'); do cdktf deploy --auto-approve $stack; done",
+    "destroy": "for stack in $(cdktf list | tail -n 2 | grep -oE '^[^ ]+'); do cdktf destroy --auto-approve $stack; done"
   },
   "engines": {
     "node": ">=14.0"
