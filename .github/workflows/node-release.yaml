@@ -51,7 +51,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -69,14 +69,14 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.ci.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
     - name: Build
       run: |
         npx lerna run build
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -94,7 +94,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.build.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
 
     - name: Synth
       run: |
@@ -102,7 +102,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -120,14 +120,14 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.build.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
     - name: Test
       run: |
         npx lerna run test
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -145,7 +145,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.synth.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
 
     - name: Plan Organization
       run: |
@@ -154,7 +154,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -172,7 +172,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.plan-organization.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
 
     - name: Deploy Organization
       # if: github.ref == 'refs/heads/main'
@@ -182,7 +182,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -200,7 +200,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.deploy-organization.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
 
     - name: Plan
       run: |
@@ -209,7 +209,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
@@ -226,7 +226,7 @@ jobs:
     - uses: actions/download-artifact@v3
       with:
         name: ${{ needs.plan.outputs.artifact_name }}
-        path: path/to/artifact
+        path: .
     - name: Deploy
       if: github.ref == 'refs/heads/main'
       run: |
@@ -235,7 +235,7 @@ jobs:
     - uses: actions/upload-artifact@v3
       with:
         name: ${{ github.run_number }}
-        path: "**/*.zip"
+        path: "**/*"
     - id: artifact_name
       run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
