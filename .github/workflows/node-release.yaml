@@ -52,14 +52,13 @@ jobs:
       run: |
         npx lerna run build
 
+    - name: Test
+      run: |
+        npx lerna run test
 
     - name: Synth
       run: |
         npx lerna run synth
-
-    - name: Test
-      run: |
-        npx lerna run test
 
     - name: Plan Organization
       run: |
