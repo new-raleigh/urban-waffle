@@ -7,7 +7,7 @@ on:
       - main
   pull_request: {}
 jobs:
-  ci:
+  deploy:
     runs-on: ubuntu-latest
     env:
       TFE_TOKEN: ${{secrets.TFE_TOKEN}}
@@ -16,7 +16,7 @@ jobs:
       AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
-    - uses: actions/checkout@v3
+    - uses: actions/checkout@v2
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
@@ -47,198 +47,37 @@ jobs:
     - name: Get Modules
       run: |
         npx lerna run get
-        
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
-
-  build:
-    runs-on: ubuntu-latest
-    needs: ci
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.ci.outputs.artifact_name }}
-        path: .
     - name: Build
       run: |
         npx lerna run build
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
-
-  synth:
-    runs-on: ubuntu-latest
-    needs: build
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.build.outputs.artifact_name }}
-        path: .
 
     - name: Synth
       run: |
         npx lerna run synth
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
 
-
-  test:
-    runs-on: ubuntu-latest
-    needs: build
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.build.outputs.artifact_name }}
-        path: .
     - name: Test
       run: |
         npx lerna run test
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
-
-
-  plan-organization:
-    runs-on: ubuntu-latest
-    needs: [synth, test]
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.synth.outputs.artifact_name }}
-        path: .
 
     - name: Plan Organization
       run: |
         npx lerna run plan --scope organization
-
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
-
-
-  deploy-organization:
-    runs-on: ubuntu-latest
-    needs: plan-organization
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.plan-organization.outputs.artifact_name }}
-        path: .
 
     - name: Deploy Organization
       # if: github.ref == 'refs/heads/main'
       run: |
         npx lerna run deploy --scope organization
 
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
-
-
-  plan:
-    runs-on: ubuntu-latest
-    needs: deploy-organization
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.deploy-organization.outputs.artifact_name }}
-        path: .
-
     - name: Plan
       run: |
         npx lerna run plan --ignore organization
 
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
-
-  deploy:
-    runs-on: ubuntu-latest
-    needs: plan
-    env:
-      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
-      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
-      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
-      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
-      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-    steps:
-    - uses: actions/download-artifact@v3
-      with:
-        name: ${{ needs.plan.outputs.artifact_name }}
-        path: .
     - name: Deploy
       if: github.ref == 'refs/heads/main'
       run: |
         npx lerna run deploy --ignore organization
-
-    - uses: actions/upload-artifact@v3
-      with:
-        name: ${{ github.run_number }}
-        path: "**/*"
-    - id: artifact_name
-      run: echo "::set-output name=artifact_name::${{ github.run_number }}"
-
 
     # - name: Publish
     #   run: |
