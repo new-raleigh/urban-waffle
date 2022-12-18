@@ -26,7 +26,11 @@ class FrontendStack extends TerraformStack {
   ) {
     super(scope, name);
 
-    new AwsProvider(this, "aws", { region: "us-east-1" });
+    new AwsProvider(this, "aws", { 
+      region: "us-east-1",
+      accessKey: assertAwsAccessKey(process.env.AWS_ACCESS_KEY_ID),
+      secretKey: assertAwsSecretAccessKey(process.env.AWS_SECRET_ACCESS_KEY),
+    });
     new LocalProvider(this, "local");
     new Frontend(this, "frontend", {
       stage: options.stage,
