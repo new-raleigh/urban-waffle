@@ -7,7 +7,7 @@ on:
       - main
   pull_request: {}
 jobs:
-  deploy:
+  ci:
     runs-on: ubuntu-latest
     env:
       TFE_TOKEN: ${{secrets.TFE_TOKEN}}
@@ -48,31 +48,101 @@ jobs:
       run: |
         npx lerna run get
 
+  build:
+    runs-on: ubuntu-latest
+    needs: ci
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
     - name: Build
       run: |
         npx lerna run build
 
-
+  synth:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
     - name: Synth
       run: |
         npx lerna run synth
 
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
     - name: Test
       run: |
         npx lerna run test
+
+  plan-organization:
+    runs-on: ubuntu-latest
+    needs: synth
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
 
     - name: Plan Organization
       run: |
         npx lerna run plan --scope organization
 
+  deploy-organization:
+    runs-on: ubuntu-latest
+    needs: plan-organization
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
     - name: Deploy Organization
       # if: github.ref == 'refs/heads/main'
       run: |
         npx lerna run deploy --scope organization
 
+  plan:
+    runs-on: ubuntu-latest
+    needs: deploy-organization
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
     - name: Plan
       run: |
         npx lerna run plan --ignore organization
+  deploy:
+    runs-on: ubuntu-latest
+    needs: plan
+    env:
+      TFE_TOKEN: ${{secrets.TFE_TOKEN}}
+      GH_ACCESS_TOKEN: ${{secrets.GH_ACCESS_TOKEN}}
+      TFE_ORGANIZATION_TOKEN: ${{secrets.TFE_ORGANIZATION_TOKEN}}
+      AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+      AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+    steps:
 
     - name: Deploy
       if: github.ref == 'refs/heads/main'
