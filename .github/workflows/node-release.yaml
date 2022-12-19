@@ -23,7 +23,7 @@ jobs:
       with:
         filters: |
           packages:
-            - 'packges/**'
+            - 'packages/**'
           cicd:
             - 'cicd/**'
     - uses: actions/setup-node@v3
