@@ -90,15 +90,16 @@ export class Frontend extends Construct {
       viewerCertificate: { cloudfrontDefaultCertificate: true },
     });
 
-    new File(this, "env", {
-      filename: path.join(__dirname, "code", ".env.production.local"),
-      content: Object.entries({
-        S3_BUCKET_FRONTEND: bucket.bucket,
-        REACT_APP_API_ENDPOINT: options.apiEndpoint,
-      })
-        .map(([key, value]) => `${key}=${value}`)
-        .join("\n"),
-    });
+    // new File(this, "env", {
+    //   filename: path.join(__dirname, "code", ".env.production.local"),
+
+    //   content: Object.entries({
+    //     S3_BUCKET_FRONTEND: bucket.bucket,
+    //     REACT_APP_API_ENDPOINT: options.apiEndpoint,
+    //   })
+    //     .map(([key, value]) => `${key}=${value}`)
+    //     .join("\n"),
+    // });
 
     new TerraformOutput(this, "frontend_domainname", {
       value: cf.domainName,
