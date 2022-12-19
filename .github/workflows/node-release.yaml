@@ -17,6 +17,15 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
     - uses: actions/checkout@v2
+    - name: Filter changed packages
+      id: changed-paths
+      uses: dorny/paths-filter@v1
+      with:
+        filters: |
+          packages:
+            - 'packges/**'
+          cicd:
+            - 'cicd/**'
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
@@ -60,25 +69,25 @@ jobs:
       run: |
         npx lerna run synth
 
-    - name: Plan Organization
-      if: github.event.diff.changed.includes('cicd')
+    - name: Plan CICD
+      if: steps.changes.outputs.cicd == 'true'
       run: |
         npx lerna run plan --scope cicd
 
-    - name: Deploy Organization
-      if: github.ref == github.event.diff.changed.includes('cicd')    
-      # if: github.ref == 'refs/heads/main' && github.event.diff.changed.includes('cicd/')
+    - name: Deploy CICD
+      if: steps.changes.outputs.cicd == 'true'
+      # if: github.ref == 'refs/heads/main' && steps.changes.outputs.cicd == 'true'
       run: |
         npx lerna run deploy --scope cicd
 
     - name: Plan
-      if: github.event.diff.changed.includes('packages')
+      if: steps.changes.outputs.packages == 'true'
       run: |
         npx lerna run plan --ignore cicd
 
     - name: Deploy
-      if: github.ref == github.event.diff.changed.includes('packages')    
-      # if: github.ref == 'refs/heads/main' && github.event.diff.changed.includes('packages/')
+      if: steps.changes.outputs.packages == 'true'
+      # if: github.ref == 'refs/heads/main' && steps.changes.outputs.packages == 'true'
       run: |
         npx lerna run deploy --ignore cicd
 
