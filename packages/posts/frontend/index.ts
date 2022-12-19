@@ -4,8 +4,8 @@ import { S3BucketWebsiteConfiguration } from "@cdktf/provider-aws/lib/s3-bucket-
 import { CloudfrontDistribution } from "@cdktf/provider-aws/lib/cloudfront-distribution";
 import { TerraformOutput } from "cdktf";
 import { Construct } from "constructs";
-import { File } from "@cdktf/provider-local/lib/file";
-import * as path from "path";
+// import { File } from "@cdktf/provider-local/lib/file";
+// import * as path from "path";
 
 const S3_ORIGIN_ID = "s3Origin";
 
@@ -89,7 +89,7 @@ export class Frontend extends Construct {
       restrictions: { geoRestriction: { restrictionType: "none" } },
       viewerCertificate: { cloudfrontDefaultCertificate: true },
     });
-
+    
     // new File(this, "env", {
     //   filename: path.join(__dirname, "code", ".env.production.local"),
 
