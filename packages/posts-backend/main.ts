@@ -1,11 +1,10 @@
 import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
-import { App, TerraformStack, CloudBackend, NamedCloudWorkspace  } from "cdktf";
+import { App, TerraformStack, CloudBackend, NamedCloudWorkspace } from "cdktf";
 
 import { Construct } from "constructs";
-import { Frontend } from "./frontend";
 import { Posts } from "./posts";
-import { LocalProvider } from "@cdktf/provider-local/lib/provider";
-type Stage =  "development" | "production";
+import { Frontend } from "./frontend";
+type Stage = "development" | "production";
 
 interface StageOptions {
   stage: Stage;
@@ -14,67 +13,47 @@ interface StageOptions {
 
 const app = new App();
 
-interface FrontendStackOptions extends StageOptions {
-  apiEndpoint: string;
-}
 
-class FrontendStack extends TerraformStack {
-  constructor(
-    scope: Construct,
-    name: string,
-    public options: FrontendStackOptions
-  ) {
+class PostsStack extends TerraformStack {
+  public posts: Posts;
+  public frontEnd: Frontend;
+
+  constructor(scope: Construct, name: string, public options: StageOptions) {
     super(scope, name);
 
-    new AwsProvider(this, "aws", { 
+    new AwsProvider(this, "aws", {
       region: "us-east-1",
       accessKey: assertAwsAccessKey(process.env.AWS_ACCESS_KEY_ID),
       secretKey: assertAwsSecretAccessKey(process.env.AWS_SECRET_ACCESS_KEY),
     });
-    new LocalProvider(this, "local");
-    new Frontend(this, "frontend", {
-      stage: options.stage,
-      apiEndpoint: options.apiEndpoint,
-    });
-  }
-}
 
-class PostsStack extends TerraformStack {
-  public posts: Posts;
-
-  constructor(scope: Construct,name: string, public options: StageOptions) {
-    super(scope, name);
-
-    new AwsProvider(this, "aws", { 
-      region: "us-east-1", 
-      accessKey: assertAwsAccessKey(process.env.AWS_ACCESS_KEY_ID),
-      secretKey: assertAwsSecretAccessKey(process.env.AWS_SECRET_ACCESS_KEY),
-    });
 
     this.posts = new Posts(this, "posts", {
       stage: options.stage,
- });
+    });
+    this.frontEnd = new Frontend(this, "front-end", {
+      stage: options.stage,
+      apiEndpoint: this.posts.apiEndpoint,
+    });
+
   }
 }
 
 const postsStack = new PostsStack(app, "posts-stack", {
   stage: assertStage(process.env.STAGE),
 });
+
+// write an export getPostsStack() function to return the postsStack
+export function getPostsStack(): PostsStack {
+  return postsStack;
+}
+
+
+
 new CloudBackend(postsStack, {
   hostname: "app.terraform.io",
   organization: "new-raleigh",
-  workspaces: new NamedCloudWorkspace("posts"),
-  token: process.env.TFE_TOKEN,
-});
-
-const frontEndStack = new FrontendStack(app, "posts-frontend-stack", {
-  stage: assertStage(process.env.STAGE),
-  apiEndpoint: postsStack.posts.apiEndpoint,
-});
-new CloudBackend(frontEndStack, {
-  hostname: "app.terraform.io",
-  organization: "new-raleigh",
-  workspaces: new NamedCloudWorkspace("posts-front-end"),
+  workspaces: new NamedCloudWorkspace("posts-backend"),
   token: process.env.TFE_TOKEN,
 });
 

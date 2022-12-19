@@ -33,14 +33,14 @@ class MyStack extends TerraformStack {
     });
 
     new OranizationRepository(this, "posts", {
-      name: "posts",
+      name: "posts-backend",
       tfeOrganization: "new-raleigh",
       tfeToken: process.env.TFE_TOKEN,
       tfeOrganizationToken: process.env.TFE_ORGANIZATION_TOKEN,
     });
 
     new OranizationRepository(this, "posts-front-end", {
-      name: "posts-front-end",
+      name: "posts-frontend",
       tfeOrganization: "new-raleigh",
       tfeToken: process.env.TFE_TOKEN,
       tfeOrganizationToken: process.env.TFE_ORGANIZATION_TOKEN,

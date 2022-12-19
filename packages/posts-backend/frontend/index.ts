@@ -4,8 +4,6 @@ import { S3BucketWebsiteConfiguration } from "@cdktf/provider-aws/lib/s3-bucket-
 import { CloudfrontDistribution } from "@cdktf/provider-aws/lib/cloudfront-distribution";
 import { TerraformOutput } from "cdktf";
 import { Construct } from "constructs";
-// import { File } from "@cdktf/provider-local/lib/file";
-// import * as path from "path";
 
 const S3_ORIGIN_ID = "s3Origin";
 
@@ -89,17 +87,24 @@ export class Frontend extends Construct {
       restrictions: { geoRestriction: { restrictionType: "none" } },
       viewerCertificate: { cloudfrontDefaultCertificate: true },
     });
-    
-    // new File(this, "env", {
-    //   filename: path.join(__dirname, "code", ".env.production.local"),
 
-    //   content: Object.entries({
-    //     S3_BUCKET_FRONTEND: bucket.bucket,
-    //     REACT_APP_API_ENDPOINT: options.apiEndpoint,
-    //   })
-    //     .map(([key, value]) => `${key}=${value}`)
-    //     .join("\n"),
-    // });
+
+    new TerraformOutput(this, "env_production_local", {
+      value: Object.entries({
+        S3_BUCKET_FRONTEND: bucket.bucket,
+        REACT_APP_API_ENDPOINT: options.apiEndpoint,
+      })
+        .map(([key, value]) => `${key}=${value}`)
+        .join("\n"),
+    }).addOverride("value",
+      Object.entries({
+        S3_BUCKET_FRONTEND: bucket.bucket,
+        REACT_APP_API_ENDPOINT: options.apiEndpoint,
+      })
+        .map(([key, value]) => `${key}=${value}`)
+        .join("\n")
+    );
+
 
     new TerraformOutput(this, "frontend_domainname", {
       value: cf.domainName,

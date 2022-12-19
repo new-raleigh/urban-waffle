@@ -1,5 +1,5 @@
 {
-  "name": "posts",
+  "name": "posts-backend",
   "version": "1.0.0",
   "main": "main.js",
   "types": "main.ts",
@@ -20,9 +20,10 @@
     "destroy:dev": "npm destroy:frontend && cdktf destroy '*-dev'",
     "destroy:prod": "npm destroy:frontend && cdktf destroy '*-prod'",
     "destroy:frontend": "npm workspace frontend run destroy",
-    "plan": "for stack in $(cdktf list | tail -n 2 | grep -oE '^[^ ]+'); do cdktf diff $stack; done",
-    "deploy": "for stack in $(cdktf list | tail -n 2 | grep -oE '^[^ ]+'); do cdktf deploy --auto-approve --ignore-missing-stack-dependencies $stack; done",
-    "destroy": "for stack in $(cdktf list | tail -n 2 | grep -oE '^[^ ]+'); do cdktf destroy --auto-approve $stack; done"
+    "plan": "cdktf diff",
+    "deploy": "cdktf deploy --auto-approve",
+    "destroy": "cdktf destroy --auto-approve",
+    "deploy:s3": "cd frontend/code; npm run deploy"
   },
   "engines": {
     "node": ">=14.0"
@@ -36,10 +37,12 @@
     "esbuild": "^0.16.7"
   },
   "devDependencies": {
+    "@cdktf/provider-random": "^4.0.0",
+    "@types/mime-types": "^2.1.1",
     "@types/node": "^18.11.15",
+    "cdktf-cli": "^0.14.3",
     "ts-node": "^10.9.1",
-    "typescript": "^4.9.4",
-    "cdktf-cli": "^0.14.3"
+    "typescript": "^4.9.4"
   },
   "workspaces": {
     "packages": [
