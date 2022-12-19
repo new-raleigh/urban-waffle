@@ -61,22 +61,26 @@ jobs:
         npx lerna run synth
 
     - name: Plan Organization
+      if: github.event.diff.changed.includes('cicd/')
       run: |
-        npx lerna run plan --scope organization
+        npx lerna run plan --scope cicd
 
     - name: Deploy Organization
-      # if: github.ref == 'refs/heads/main'
+      if: github.ref == github.event.diff.changed.includes('cicd/')    
+      # if: github.ref == 'refs/heads/main' && github.event.diff.changed.includes('cicd/')
       run: |
-        npx lerna run deploy --scope organization
+        npx lerna run deploy --scope cicd
 
     - name: Plan
+      if: github.event.diff.changed.includes('packages/')
       run: |
-        npx lerna run plan --ignore organization
+        npx lerna run plan --ignore cicd
 
     - name: Deploy
-      # if: github.ref == 'refs/heads/main'
+      if: github.ref == github.event.diff.changed.includes('packages/')    
+      # if: github.ref == 'refs/heads/main' && github.event.diff.changed.includes('packages/')
       run: |
-        npx lerna run deploy --ignore organization
+        npx lerna run deploy --ignore cicd
 
     # - name: Publish
     #   run: |
