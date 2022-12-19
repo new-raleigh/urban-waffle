@@ -75,8 +75,8 @@ jobs:
         npx lerna run plan --scope cicd
 
     - name: Deploy CICD
-      if: steps.changes.outputs.cicd == 'true'
-      # if: github.ref == 'refs/heads/main' && steps.changes.outputs.cicd == 'true'
+      # if: steps.changes.outputs.cicd == 'true'
+      if: github.ref == 'refs/heads/main' && steps.changes.outputs.cicd == 'true'
       run: |
         npx lerna run deploy --scope cicd
 
@@ -86,8 +86,8 @@ jobs:
         npx lerna run plan --ignore cicd
 
     - name: Deploy
-      if: steps.changes.outputs.packages == 'true'
-      # if: github.ref == 'refs/heads/main' && steps.changes.outputs.packages == 'true'
+      # if: steps.changes.outputs.packages == 'true'
+      if: github.ref == 'refs/heads/main' && steps.changes.outputs.packages == 'true'
       run: |
         npx lerna run deploy --ignore cicd
 
