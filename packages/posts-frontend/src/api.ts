@@ -23,7 +23,7 @@ export function usePosts() {
       setPosts(rows.reverse());
     } catch (err) {
       console.error("Error fetching posts:", err);
-      // setError(err);
+      setError(err);
     }
   };
 
