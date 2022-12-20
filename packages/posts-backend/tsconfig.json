@@ -7,7 +7,9 @@
   ],
   "exclude": [
     "node_modules",
-    "cdktf.out"
+    "cdktf.out",
+    "posts/api/lambda", 
+    "frontend/code"
   ],
   "extends": "../../tsconfig.json"
 }

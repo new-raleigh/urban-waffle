@@ -17,6 +17,15 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
     - uses: actions/checkout@v2
+    - name: Filter changed packages
+      id: filter
+      uses: dorny/paths-filter@v1
+      with:
+        filters: |
+          packages:
+            - 'packages/**'
+          cicd:
+            - 'cicd/**'
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
@@ -52,32 +61,35 @@ jobs:
       run: |
         npx lerna run build
 
+    - name: Test
+      run: |
+        npx lerna run test
 
     - name: Synth
       run: |
         npx lerna run synth
 
-    - name: Test
+    - name: Plan CICD
+      if: steps.filter.outputs.cicd == 'true'
       run: |
-        npx lerna run test
+        npx lerna run plan --scope cicd
 
-    - name: Plan Organization
+    - name: Deploy CICD
+      # if: steps.filter.outputs.cicd == 'true'
+      if: github.ref == 'refs/heads/main' && steps.filter.outputs.cicd == 'true'
       run: |
-        npx lerna run plan --scope organization
-
-    - name: Deploy Organization
-      # if: github.ref == 'refs/heads/main'
-      run: |
-        npx lerna run deploy --scope organization
+        npx lerna run deploy --scope cicd
 
     - name: Plan
+      if: steps.filter.outputs.packages == 'true'
       run: |
-        npx lerna run plan --ignore organization
+        npx lerna run plan --ignore cicd
 
     - name: Deploy
-      if: github.ref == 'refs/heads/main'
+      # if: steps.filter.outputs.packages == 'true'
+      if: github.ref == 'refs/heads/main' && steps.filter.outputs.packages == 'true'
       run: |
-        npx lerna run deploy --ignore organization
+        npx lerna run deploy --ignore cicd
 
     # - name: Publish
     #   run: |
