@@ -18,7 +18,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
     - name: Filter changed packages
-      id: changed-paths
+      id: filter
       uses: dorny/paths-filter@v1
       with:
         filters: |
@@ -70,24 +70,24 @@ jobs:
         npx lerna run synth
 
     - name: Plan CICD
-      if: steps.changes.outputs.cicd == 'true'
+      if: steps.filter.outputs.cicd == 'true'
       run: |
         npx lerna run plan --scope cicd
 
     - name: Deploy CICD
-      # if: steps.changes.outputs.cicd == 'true'
-      if: github.ref == 'refs/heads/main' && steps.changes.outputs.cicd == 'true'
+      # if: steps.filter.outputs.cicd == 'true'
+      if: github.ref == 'refs/heads/main' && steps.filter.outputs.cicd == 'true'
       run: |
         npx lerna run deploy --scope cicd
 
     - name: Plan
-      if: steps.changes.outputs.packages == 'true'
+      if: steps.filter.outputs.packages == 'true'
       run: |
         npx lerna run plan --ignore cicd
 
     - name: Deploy
-      # if: steps.changes.outputs.packages == 'true'
-      if: github.ref == 'refs/heads/main' && steps.changes.outputs.packages == 'true'
+      # if: steps.filter.outputs.packages == 'true'
+      if: github.ref == 'refs/heads/main' && steps.filter.outputs.packages == 'true'
       run: |
         npx lerna run deploy --ignore cicd
 
