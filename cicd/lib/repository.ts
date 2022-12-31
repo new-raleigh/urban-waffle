@@ -14,7 +14,7 @@ interface Props {
   tfeOrganizationToken: string;
 }
 
-export class OranizationRepository extends Construct {
+export class OrganizationRepository extends Construct {
 
   constructor(scope: Construct, id: string, props: Props) {
     super(scope, id);
