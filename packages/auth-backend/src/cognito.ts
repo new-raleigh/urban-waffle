@@ -10,62 +10,21 @@ import { IamPolicy } from "@cdktf/provider-aws/lib/iam-policy";
 import { IamRolePolicyAttachment } from "@cdktf/provider-aws/lib/iam-role-policy-attachment";
 // import CognitoUserPoolClient
 import { CognitoUserPoolClient } from "@cdktf/provider-aws/lib/cognito-user-pool-client";
-// import CognitoUserPoolDomain
-import { CognitoUserPoolDomain } from "@cdktf/provider-aws/lib/cognito-user-pool-domain";
 
-export interface CognitoOptions {
-    name: string;
-    region: string;
-    vpcId: string;
-    privateSubnetIds: string[];
-    publicSubnetIds: string[];
-    webservice: {
-        instanceType: string;
-        minSize: number;
-        maxSize: number;
-        desiredCapacity: number;
-        authenticationPath: string;
-        certificateArn: string;
-    };
-    cognito: {
-        domain: string;
-        autoVerifiedAttributes: string[];
-        mfaConfiguration: string;
-        oauthFlows: string[];
-        oauthScopes: string[];
-        callbackUrls: string[];
-        passwordPolicy: {
-            minimumLength: number;
-            requireLowercase: boolean;
-            requireNumbers: boolean;
-            requireSymbols: boolean;
-            requireUppercase: boolean;
-            temporaryPasswordValidityDays: number;
-        };
-        schema: {
-            name: string;
-            attributeDataType: string;
-            developerOnlyAttribute: boolean;
-            mutable: boolean;
-            required: boolean;
-            stringAttributeConstraints: {
-                maxLength: string;
-                minLength: string;
-            }
-        }[];
-    };
+
+
+export interface Props {
+    userPoolName: string;
+    callbackUrls: string[];
 }
-
-
 
 export class Cognito extends Construct {
     public readonly userPoolArn: string;
     public readonly userPoolClientSecret: string;
     public readonly userPoolClientId: string;
-    public readonly userPoolDomain: string;
     public readonly userPoolClientOauthScopes: string[];
 
-    constructor(scope: Construct, name: string, config: CognitoOptions ) {
+    constructor(scope: Construct, name: string, props: Props ) {
         super(scope, name);
 
         const snsPolicy = new IamPolicy(this, 'sns-policy', {
@@ -99,37 +58,41 @@ export class Cognito extends Construct {
         });
 
         const userPool = new CognitoUserPool(this, 'cognito-user-pool', {
-            name: config.name + '-user-pool',
-            autoVerifiedAttributes: config.cognito.autoVerifiedAttributes,
-            mfaConfiguration: config.cognito.mfaConfiguration,
+            name: props.userPoolName,
+            autoVerifiedAttributes: ['email'],
+            mfaConfiguration: 'OPTIONAL',
             smsConfiguration: {
-                externalId: config.name + '-external',
+                externalId: props.userPoolName + '-external',
                 snsCallerArn: snsRole.arn
             },
             passwordPolicy: {
-                minimumLength: config.cognito.passwordPolicy.minimumLength,
-                requireLowercase: config.cognito.passwordPolicy.requireLowercase,
-                requireNumbers: config.cognito.passwordPolicy.requireNumbers,
-                requireSymbols: config.cognito.passwordPolicy.requireSymbols,
-                requireUppercase: config.cognito.passwordPolicy.requireUppercase,
-                temporaryPasswordValidityDays: config.cognito.passwordPolicy.temporaryPasswordValidityDays
+                minimumLength: 8,
+                requireLowercase: true,
+                requireNumbers: true,
+                requireSymbols: true,
+                requireUppercase: true,
+                temporaryPasswordValidityDays: 7
             },
-            schema: config.cognito.schema,
+            schema: [{
+                "name": "email",
+                "attributeDataType": "String",
+                "developerOnlyAttribute": false,
+                "mutable": false,
+                "required": true,
+                "stringAttributeConstraints": {
+                    "maxLength": "2048",
+                    "minLength": "0"
+                }
+            }],
         });
 
-        new CognitoUserPoolDomain(this, 'cognito-domain', {
-            // generate a idempotent domain name
-            domain: config.cognito.domain,
-            certificateArn: config.webservice.certificateArn,
-            userPoolId: userPool.id
-        })
 
         const client = new CognitoUserPoolClient(this, 'cognito-client', {
-            name: config.name + '-client',
+            name: props.userPoolName + '-client',
             allowedOauthFlowsUserPoolClient: true,
-            allowedOauthFlows: config.cognito.oauthFlows,
-            allowedOauthScopes: config.cognito.oauthScopes,
-            callbackUrls: config.cognito.callbackUrls,
+            allowedOauthFlows: ["code"],
+            allowedOauthScopes: ["openid"],
+            callbackUrls: props.callbackUrls,
             generateSecret: true,
             userPoolId: userPool.id,
             supportedIdentityProviders: ["COGNITO"]
@@ -144,7 +107,6 @@ export class Cognito extends Construct {
         this.userPoolArn = userPool.arn
         this.userPoolClientSecret = client.clientSecret
         this.userPoolClientId = client.id
-        this.userPoolDomain = userPool.domain;
         this.userPoolClientOauthScopes = client.allowedOauthScopes
     }
 }
