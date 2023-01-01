@@ -63,7 +63,7 @@ app.synth();
 
 // try to see if the process.env.STAGE can be casted to type Stage
 // throw an error if it cannot
-function assertStage(stage: string | undefined): Stage {
+export function assertStage(stage: string | undefined): Stage {
   if (stage === undefined) {
     return "production";
   }
@@ -75,7 +75,7 @@ function assertStage(stage: string | undefined): Stage {
 
 // function to see if the process.env.AWS_ACCESS_KEY_ID is undefined or empty
 // throw an error if it is
-function assertAwsAccessKey(awsAccessKeyId: string | undefined): string {
+export function assertAwsAccessKey(awsAccessKeyId: string | undefined): string {
   if (awsAccessKeyId === undefined || awsAccessKeyId === "") {
     throw new Error("AWS_ACCESS_KEY_ID is undefined or empty. Please set the AWS_ACCESS_KEY_ID environment variable to your AWS Access Key ID.");
   }
@@ -84,7 +84,7 @@ function assertAwsAccessKey(awsAccessKeyId: string | undefined): string {
 
 // function to see if the process.env.AWS_SECRET_ACCESS_KEY is undefined or empty
 // throw an error if it is
-function assertAwsSecretAccessKey(awsSecretAccessKey: string | undefined): string {
+export function assertAwsSecretAccessKey(awsSecretAccessKey: string | undefined): string {
   if (awsSecretAccessKey === undefined || awsSecretAccessKey === "") {
     throw new Error("AWS_SECRET_ACCESS_KEY is undefined or empty. Please set the AWS_SECRET_ACCESS_KEY environment variable to your AWS Secret Access Key.");
   }

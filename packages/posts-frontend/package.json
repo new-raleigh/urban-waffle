@@ -23,7 +23,7 @@
     "build": "react-scripts build",
     "test": "echo ok",
     "eject": "react-scripts eject",
-    "predeploy": "npm run build",
+    "predeploy": "yarn run build",
     "deploy": "node scripts/deploy.js",
     "destroy": "node scripts/destroy.js"
   },

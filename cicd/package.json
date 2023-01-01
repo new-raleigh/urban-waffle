@@ -13,8 +13,8 @@
     "watch": "tsc -w",
     "test": "jest",
     "test:watch": "jest --watch",
-    "upgrade": "npm i cdktf@latest cdktf-cli@latest",
-    "upgrade:next": "npm i cdktf@next cdktf-cli@next",
+    "upgrade": "yarn i cdktf@latest cdktf-cli@latest",
+    "upgrade:next": "yarn i cdktf@next cdktf-cli@next",
     "plan": "cdktf diff --verbose",
     "deploy": "cdktf deploy --auto-approve",
     "destroy": "cdktf destroy --auto-approve"
