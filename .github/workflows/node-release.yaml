@@ -32,7 +32,9 @@ jobs:
         cache: 'npm'
 
     - name: Install dependencies
-      run: npx yarn ci
+      run: | 
+        npm install -g yarn
+        npx yarn ci
 
 
     - name: Install dependencies
