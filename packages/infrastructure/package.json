@@ -21,7 +21,7 @@
     "destroy:prod": "npm destroy:frontend && cdktf destroy '*-prod'",
     "destroy:frontend": "npm workspace frontend run destroy",
     "plan": "cdktf diff",
-    "deploy": "cdktf deploy --auto-approve",
+    "deploy": "cdktf deploy --auto-approve && cd cdktf.out/stacks/posts-stack && terraform output -json | jq -r '.[\"front-end_env_production_local_860CE1F6\"].value' > ../../../../posts-frontend/.env.production.local",
     "destroy": "cdktf destroy --auto-approve",
     "deploy:s3": "cd frontend/code; npm run deploy"
   },

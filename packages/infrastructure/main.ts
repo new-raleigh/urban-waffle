@@ -20,7 +20,6 @@ class PostsStack extends TerraformStack {
 
   constructor(scope: Construct, name: string, public options: StageOptions) {
     super(scope, name);
-    console.log(process.env.AWS_ACCESS_KEY_ID);
     new AwsProvider(this, "aws", {
       region: "us-east-1",
       accessKey: assertAwsAccessKey(process.env.AWS_ACCESS_KEY_ID),
