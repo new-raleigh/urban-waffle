@@ -65,7 +65,6 @@ jobs:
         npx lerna run plan --scope infrastructure
 
     - name: Deploy infrastructure
-      # if: steps.filter.outputs.cicd == 'true'
       if: github.ref == 'refs/heads/main'
       run: |
         npx lerna run deploy --scope infrastructure
@@ -79,7 +78,7 @@ jobs:
       # if: steps.filter.outputs.packages == 'true'
       if: github.ref == 'refs/heads/main' && steps.filter.outputs.packages == 'true'
       run: |
-        npx lerna run deploy --ignore cicd
+        npx lerna run deploy --ignore infrastructure
 
     # - name: Publish
     #   run: |
