@@ -24,7 +24,7 @@ class PostsStack extends TerraformStack {
       region: "us-east-1",
       accessKey: assertAwsAccessKey(process.env.AWS_ACCESS_KEY_ID),
       secretKey: assertAwsSecretAccessKey(process.env.AWS_SECRET_ACCESS_KEY),
-      token: assertAwsSessionToken(process.env.AWS_SESSION_TOKEN),
+      token: process.env.AWS_SESSION_TOKEN,
     });
 
 
@@ -91,9 +91,3 @@ function assertAwsSecretAccessKey(awsSecretAccessKey: string | undefined): strin
   return awsSecretAccessKey;
 }
 
-function assertAwsSessionToken(awsSessionToken: string | undefined): string | undefined {
-  if (awsSessionToken === undefined || awsSessionToken === "") {
-    return ""
-  }
-  return awsSessionToken;
-}
