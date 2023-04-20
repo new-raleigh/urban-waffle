@@ -2,7 +2,7 @@
   "language": "typescript",
   "app": "npx ts-node main.ts",
   "terraformProviders": [],
-  "terraformModules": [],
+  "terraformModules": ["terraform-aws-modules/vpc/aws@ ~> 3.2.0"],
   "context": {
     "excludeStackIdFromLogicalIds": "true",
     "allowSepCharsInLogicalIds": "true"
