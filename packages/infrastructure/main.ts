@@ -1,5 +1,5 @@
 import { AwsProvider } from "@cdktf/provider-aws/lib/provider";
-import { App, TerraformStack, CloudBackend, NamedCloudWorkspace } from "cdktf";
+import { App, TerraformStack } from "cdktf";
 
 import { Construct } from "constructs";
 import { Posts } from "./posts";
@@ -20,11 +20,12 @@ class PostsStack extends TerraformStack {
 
   constructor(scope: Construct, name: string, public options: StageOptions) {
     super(scope, name);
-
+    console.log(process.env.AWS_ACCESS_KEY_ID);
     new AwsProvider(this, "aws", {
       region: "us-east-1",
       accessKey: assertAwsAccessKey(process.env.AWS_ACCESS_KEY_ID),
       secretKey: assertAwsSecretAccessKey(process.env.AWS_SECRET_ACCESS_KEY),
+      token: assertAwsSessionToken(process.env.AWS_SESSION_TOKEN),
     });
 
 
@@ -50,12 +51,12 @@ export function getPostsStack(): PostsStack {
 
 
 
-new CloudBackend(postsStack, {
-  hostname: "app.terraform.io",
-  organization: "new-raleigh",
-  workspaces: new NamedCloudWorkspace("posts-backend"),
-  token: process.env.TFE_TOKEN,
-});
+// new CloudBackend(postsStack, {
+//   hostname: "app.terraform.io",
+//   organization: "new-raleigh",
+//   workspaces: new NamedCloudWorkspace("posts-backend"),
+//   token: process.env.TFE_TOKEN,
+// });
 
 
 app.synth();
@@ -89,4 +90,11 @@ function assertAwsSecretAccessKey(awsSecretAccessKey: string | undefined): strin
     throw new Error("AWS_SECRET_ACCESS_KEY is undefined or empty. Please set the AWS_SECRET_ACCESS_KEY environment variable to your AWS Secret Access Key.");
   }
   return awsSecretAccessKey;
+}
+
+function assertAwsSessionToken(awsSessionToken: string | undefined): string | undefined {
+  if (awsSessionToken === undefined || awsSessionToken === "") {
+    throw new Error("AWS_SESSION_TOKEN is undefined or empty. Please set the AWS_SESSION_TOKEN environment variable to your AWS Session Token.");
+  }
+  return awsSessionToken;
 }

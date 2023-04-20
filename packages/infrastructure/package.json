@@ -1,5 +1,5 @@
 {
-  "name": "posts-backend",
+  "name": "infrastructure",
   "version": "1.0.0",
   "main": "main.js",
   "types": "main.ts",

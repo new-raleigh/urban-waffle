@@ -17,15 +17,6 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
     steps:
     - uses: actions/checkout@v2
-    - name: Filter changed packages
-      id: filter
-      uses: dorny/paths-filter@v1
-      with:
-        filters: |
-          packages:
-            - 'packages/**'
-          cicd:
-            - 'cicd/**'
     - uses: actions/setup-node@v3
       with:
         node-version: 16.x
@@ -69,21 +60,20 @@ jobs:
       run: |
         npx lerna run synth
 
-    - name: Plan CICD
-      if: steps.filter.outputs.cicd == 'true'
+    - name: Plan infrastructure
       run: |
-        npx lerna run plan --scope cicd
+        npx lerna run plan --scope infrastructure
 
-    - name: Deploy CICD
+    - name: Deploy infrastructure
       # if: steps.filter.outputs.cicd == 'true'
-      if: github.ref == 'refs/heads/main' && steps.filter.outputs.cicd == 'true'
+      if: github.ref == 'refs/heads/main'
       run: |
-        npx lerna run deploy --scope cicd
+        npx lerna run deploy --scope infrastructure
 
     - name: Plan
       if: steps.filter.outputs.packages == 'true'
       run: |
-        npx lerna run plan --ignore cicd
+        npx lerna run plan --ignore infrastructure
 
     - name: Deploy
       # if: steps.filter.outputs.packages == 'true'
