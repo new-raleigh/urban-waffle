@@ -93,7 +93,7 @@ function assertAwsSecretAccessKey(awsSecretAccessKey: string | undefined): strin
 
 function assertAwsSessionToken(awsSessionToken: string | undefined): string | undefined {
   if (awsSessionToken === undefined || awsSessionToken === "") {
-    throw new Error("AWS_SESSION_TOKEN is undefined or empty. Please set the AWS_SESSION_TOKEN environment variable to your AWS Session Token.");
+    return ""
   }
   return awsSessionToken;
 }
