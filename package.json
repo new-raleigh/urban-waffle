@@ -17,6 +17,7 @@
     "upgrade:next": "lerna run upgrade:next",
     "plan": "lerna run plan",
     "deploy": "lerna run deploy",
-    "destroy": "lerna run destroy"
+    "destroy": "lerna run destroy",
+    "start": "lerna run start"
   }
 }
